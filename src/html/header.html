@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>jma</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style type="text/css">
+      body {
+        padding-top: 25px;
+        padding-left: 300px;
+        padding-right: 300px;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 50px;
+        width: 200px;
+        padding: 7px;
+        background: #aaaaaa;
+        font-size: 14;
+      }
+
+      #info {
+        top: 30px;
+      }
+
+      #settings {
+        top: 200px;
+      }
+
+      #settings label {
+        display: block;
+        float: left;
+        width: 100px;
+      }
+
+      .word:hover:after {
+        position: fixed;
+        left: 50px;
+        top: 30px;
+        width: 200px;
+        padding: 7px;
+        font-size: 14;
+        white-space: pre;
+        content: "Pos:　" attr(data-pos) "\A Base:　" attr(data-baseform) "\A Dict:　" attr(data-dictform) "\A Reading:　" attr(data-reading) "\A Group:　" attr(data-verbgroup) "\A Desc:　" attr(data-desc) "\A ExtDesc:　" attr(data-extdesc);
+      }
+
+      .word[data-pos='記号']:hover:after {
+        display: none !important;
+      }
+    </style>
+    <script type="text/javascript">
+      function addSpace(pixel) {
+        var x = document.querySelectorAll('.word');
+        var i;
+        for(i = 0; i < x.length; i++) {
+          x[i].style.marginRight = pixel;
+        }
+      }
+
+      function changeColor(selector, color) {
+        var x = document.querySelectorAll(selector);
+        var i;
+        for(i = 0; i < x.length; i++) {
+          x[i].style.color = color;
+        }
+      }
+    </script>
+  </head>
+  <body>

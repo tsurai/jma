@@ -1,0 +1,9 @@
+[package]
+name = "jma"
+version = "0.1.0"
+authors = ["Cristian Kubis <cristian.kubis@tsunix.de>"]
+
+[dependencies]
+mecab = "*"
+hyper = "*"
+url = "*"
