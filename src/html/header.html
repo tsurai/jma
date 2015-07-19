@@ -10,6 +10,18 @@
         padding-right: 300px;
       }
 
+      input {
+        width: 60px;
+      }
+
+      ruby {
+        line-height: 100%;
+      }
+
+      rt {
+        line-height: 50%;
+      }
+
       .sidebar {
         position: fixed;
         left: 50px;
@@ -40,6 +52,7 @@
         width: 200px;
         padding: 7px;
         font-size: 14;
+        color: #000000;
         white-space: pre;
         content: "Pos:　" attr(data-pos) "\A Base:　" attr(data-baseform) "\A Dict:　" attr(data-dictform) "\A Reading:　" attr(data-reading) "\A Group:　" attr(data-verbgroup) "\A Desc:　" attr(data-desc) "\A ExtDesc:　" attr(data-extdesc);
       }
@@ -49,21 +62,61 @@
       }
     </style>
     <script type="text/javascript">
-      function addSpace(pixel) {
+      function changeSpace(pixel) {
         var x = document.querySelectorAll('.word');
-        var i;
-        for(i = 0; i < x.length; i++) {
+        for(var i = 0; i < x.length; i++) {
           x[i].style.marginRight = pixel;
         }
       }
 
       function changeColor(selector, color) {
         var x = document.querySelectorAll(selector);
-        var i;
-        for(i = 0; i < x.length; i++) {
+        for(var i = 0; i < x.length; i++) {
           x[i].style.color = color;
+        }
+      }
+
+      function toggleFurigana(state) {
+        var x = document.querySelectorAll("rt");
+        for(var i = 0; i < x.length; i++) {
+          x[i].style.display = (state) ? "" : "none";
+        }
+      }
+
+      function save() {
+        if(typeof(Storage) !== "undefined") {
+          localStorage.setItem("furigana", document.getElementById("furigana").checked);
+          localStorage.setItem("space", document.getElementById("space").value);
+
+          var colors = [];
+          var x = document.querySelectorAll('input[id^="color"]');
+          for(var i = 0; i < x.length; i++) {
+            colors.push(x[i].value);
+          }
+          localStorage.setItem("colors", colors);
+        } else {
+          alert("Your browser does not support HTML5 storage");
+        }
+      }
+
+      function load() {
+        if(typeof(Storage) !== "undefined" && localStorage.furigana) {
+          var state = localStorage.furigana == "true";
+          document.getElementById("furigana").checked = state;
+          toggleFurigana(state);
+
+          state = localStorage.space;
+          document.getElementById("space").value = state;
+          changeSpace(state);
+
+          var colors = localStorage.colors.split(",");
+          var x = document.querySelectorAll('input[id^="color"]');
+          for(var i = 0; i < x.length; i++) {
+            x[i].value = colors[i];
+            x[i].onchange();
+          }
         }
       }
     </script>
   </head>
-  <body>
+  <body onload="load()">

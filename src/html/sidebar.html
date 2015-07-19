@@ -8,8 +8,10 @@
       ExtDesc:　<br>
     </div>
     <div id="settings" class="sidebar">
+      <label for="furigana">Furigana: </label>
+      <input id="furigana" type="checkbox" onchange="toggleFurigana(this.checked)" checked><br>
       <label for="space">Space: </label>
-      <input id="space" type="number" onchange="addSpace(this.value)" value="0" max="99" min="0">
+      <input id="space" type="number" onchange="changeSpace(this.value)" value="0" max="99" min="0">
       <label for="color-noun">Noun: </label>
       <input type="color" id="color-noun" onchange="changeColor('[data-pos=&quot;名詞&quot;]', this.value)"><br>
       <label for="color-particle">Particle: </label>
@@ -21,5 +23,6 @@
       <label for="color-auxverb">Aux Verb: </label>
       <input type="color" id="color-auxverb" onchange="changeColor('[data-pos=&quot;助動詞&quot;]', this.value)"><br>
       <label for="color-adverb">Adverb: </label>
-      <input type="color" id="color-adverb" onchange="changeColor('[data-pos=&quot;副詞&quot;]', this.value)"><br>
+      <input type="color" id="color-adverb" onchange="changeColor('[data-pos=&quot;副詞&quot;]', this.value)"><br><br>
+      <input type="button" onclick="save()" value="save">
     </div>

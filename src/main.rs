@@ -4,6 +4,7 @@ extern crate hyper;
 extern crate mecab;
 extern crate url;
 
+use std::char;
 use std::io::{Read, Write};
 use mecab::Tagger;
 use hyper::{Get, Post};
@@ -37,18 +38,30 @@ fn main() {
           res.write(sidebar.as_bytes());
 
           for node in tagger.parse_to_node(percent_decode(&input[2..].as_bytes())).iter_next() {
-            let feature: Vec<&str> = node.feature.split(',').collect();
+            let feature : Vec<&str> = node.feature.split(',').collect();
+
             if feature[0] == "記号" && feature[6] == "*" {
               res.write(b"<br>");
             } else if feature[0] != "BOS/EOS" && feature[6] != "　" {
-              res.write(format!("<span class=\"word\" data-pos=\"{}\" data-desc=\"{}\" data-extdesc=\"{}\" data-verbgroup=\"{}\" data-baseform=\"{}\" data-dictform=\"{}\" data-reading=\"{} | {}\">{}</span>", feature[0], feature[1], feature[2], feature[3], feature[4], feature[5], feature[6], if feature.len() > 7 && feature[6] != feature[7] { feature[7] } else { "*" }, &node.surface[..(node.length as usize)]).as_bytes());
+              let surface = &node.surface[..(node.length as usize)];
+
+              res.write(format!("<span class=\"word\" data-pos=\"{}\" data-desc=\"{}\" data-extdesc=\"{}\" data-verbgroup=\"{}\" data-baseform=\"{}\" data-dictform=\"{}\" data-reading=\"{}\">", feature[0], feature[1], feature[2], feature[3], feature[4], feature[5], if feature.len() > 7 { feature[7] } else { "*" }).as_bytes());
+
+              if surface.chars().any(|x| x as u32 >= 0x4e00u32 && x as u32 <= 0x9fafu32) {
+                let furigana : String = feature[7].chars().map(|x| char::from_u32(x as u32 - 96).unwrap()).collect();
+                res.write(format!("<ruby><rb>{}</rb><rp>(</rp><rt>{}</rt><rp>)</rp></ruby>", surface, furigana).as_bytes());
+              } else {
+                res.write(surface.as_bytes());
+              }
+
+              res.write(b"</span>");
             }
           }
         }
       },
       _ => {}
     }
-    
+
     res.write(b"</body></html>");
     res.end().unwrap();
   });
